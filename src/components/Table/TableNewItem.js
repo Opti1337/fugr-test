@@ -1,5 +1,4 @@
 import React from 'react';
-const $ = require('jquery');
 
 class TableNewItem extends React.Component {
     constructor(props) {

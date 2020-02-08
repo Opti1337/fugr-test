@@ -31,8 +31,10 @@ class TableComponent extends React.Component {
             pagingType: 'numbers',
             lengthChange: false,
             info: false,
-            select: true
-        });
+            select: true,
+            dom: "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
+        }).search(this.props.searchQuery).draw();
 
         this.getDataTable().on('select', (e, dt, type, indexes) => {
             this.setState({
@@ -43,6 +45,18 @@ class TableComponent extends React.Component {
                 selectedItem: null
             });
         });
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.searchQuery !== prevProps.searchQuery) {
+            this.getDataTable().search(this.props.searchQuery).draw();
+        }
+
+        if (this.props.data.length !== prevProps.data.length) {
+            this.getDataTable().clear();
+            this.getDataTable().rows.add(this.props.data);
+            this.getDataTable().draw();
+        }        
     }
 
     getDataTable() {

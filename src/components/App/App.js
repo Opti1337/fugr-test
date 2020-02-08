@@ -1,5 +1,5 @@
 import React from 'react';
-import { TableComponent } from '../Table';
+import { TableComponent, TableToolbar } from '../Table';
 import Loader from '../Loader';
 
 class App extends React.Component {
@@ -8,8 +8,11 @@ class App extends React.Component {
 
     this.state = {
       isLoading: null,
-      data: []
+      data: [],
+      searchQuery: ''
     };
+
+    this.handleNewItemCreated = this.handleNewItemCreated.bind(this);
   }
 
   fetchData(type = 'small') {
@@ -34,11 +37,17 @@ class App extends React.Component {
     });
   }
 
+  handleNewItemCreated(formData) {
+    this.setState({
+      data: [formData, ...this.state.data]
+    });
+  }
+
   render() {
     return (
       <div className="container py-5">
         <p className="mb-2">Выберите размер данных:</p>
-        <div className="buttons mb-4">
+        <div className="mb-5">
           <button className="btn btn-primary mr-1" onClick={this.fetchData.bind(this, 'small')}>Маленький</button>
           <button className="btn btn-primary" onClick={this.fetchData.bind(this, 'big')}>Большой</button>
         </div>
@@ -47,7 +56,8 @@ class App extends React.Component {
         }
         {this.state.isLoading === false &&
           <div>
-            <TableComponent data={this.state.data} />
+            <TableToolbar onSearch={query => this.setState({ searchQuery: query })} onCreate={this.handleNewItemCreated} />
+            <TableComponent data={this.state.data} searchQuery={this.state.searchQuery} />
           </div>
         }
       </div>
